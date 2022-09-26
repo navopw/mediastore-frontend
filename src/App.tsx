@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import TestPage from "./pages/TestPage";
+import MediaPage from "./pages/MediaPage";
 
 const App = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={<TestPage />} />
+				<Route path="/" element={<MediaPage />} />
 			</Routes>
 		</BrowserRouter>
 	);
