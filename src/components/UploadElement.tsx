@@ -81,7 +81,7 @@ const UploadElement = (props: UploadElementProps) => {
                 (uploading) && (
                     <div className="mt-2">
                         <div className="w-full bg-gray-400 rounded-full">
-                            <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${uploadProgress}%` }}>
+                            <div className="bg-gray-800 text-xs font-medium text-white text-center p-0.5 leading-none rounded-full" style={{ width: `${uploadProgress}%` }}>
                                 {
                                     uploadProgress == 100 ? (
                                         <>Processing media...</>
