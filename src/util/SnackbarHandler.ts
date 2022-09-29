@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { ProviderContext } from 'notistack';
+import { ClientResponseError } from 'pocketbase';
 
 const handleError = (snackbar: ProviderContext, error: any) => {
     if (typeof error === 'string') {
@@ -17,6 +18,8 @@ const handleError = (snackbar: ProviderContext, error: any) => {
             snackbar.enqueueSnackbar(formattedMessage, { variant: 'error' })
         }
 
+    } else if (error instanceof ClientResponseError) {
+        snackbar.enqueueSnackbar(error.message, { variant: 'error' })
     } else {
         console.log(error)
         snackbar.enqueueSnackbar("Something went wrong, see console", { variant: 'error' })
