@@ -1,8 +1,10 @@
 import axios from 'axios'
-import {Buffer} from 'buffer';
+import { Buffer } from 'buffer';
+
+import Config from '../Config'
 
 // Set base url
-axios.defaults.baseURL = 'http://localhost:8090/api'
+axios.defaults.baseURL = Config.pocketbase + "/api"
 
 export const listMedia = async () => {
     const { data } = await axios.get('/media/list')
