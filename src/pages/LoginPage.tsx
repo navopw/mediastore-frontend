@@ -10,8 +10,8 @@ import { useEffectOnce } from 'react-use'
 
 const LoginPage = () => {
     const navigate = useNavigate()
-    const [username, setUsername] = React.useState('stanislav.hetzel@outlook.com')
-    const [password, setPassword] = React.useState('12345678')
+    const [username, setUsername] = React.useState('')
+    const [password, setPassword] = React.useState('')
 
     useEffectOnce(() => {
         if (client.authStore.isValid) {
