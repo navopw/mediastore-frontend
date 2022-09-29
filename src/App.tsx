@@ -6,11 +6,13 @@ import LoginPage from "./pages/LoginPage";
 import MediaPage from "./pages/MediaPage";
 
 import 'cross-fetch/polyfill';
+import Navbar from "./components/Navbar";
 
 const App = () => {
 	return (
 		<BrowserRouter>
 			<SnackbarProvider maxSnack={3}>
+				<Navbar/>
 				<Routes>
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/" element={<MediaPage />} />
