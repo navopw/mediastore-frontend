@@ -1,3 +1,4 @@
+import React from "react";
 import { useSnackbar } from "notistack";
 import { uploadMedia } from "../requests/Requests";
 import { handleError, handleSuccess } from "../util/SnackbarHandler";
@@ -9,6 +10,9 @@ interface UploadElementProps {
 const UploadElement = (props: UploadElementProps) => {
     const snackbar = useSnackbar();
 
+    const [uploading, setUploading] = React.useState(false);
+    const [uploadProgress, setUploadProgress] = React.useState<number>(0);
+
     const handleFileChange = async (event: any) => {
         const files = event.target.files
 
@@ -17,11 +21,15 @@ const UploadElement = (props: UploadElementProps) => {
             return
         }
 
+        setUploading(true)
+
         // Loop through all files and upload them
         for (let i = 0; i < files.length; i++) {
             const file: File | null = files.item(i);
             try {
-                const response = await uploadMedia(file!!);
+                const response = await uploadMedia(file!!, (percent: number) => {
+                    setUploadProgress(percent);
+                });
 
                 // Trigger event
                 props.onUpload();
@@ -32,6 +40,8 @@ const UploadElement = (props: UploadElementProps) => {
                 handleError(snackbar, error);
             }
         }
+
+        setUploading(false)
     }
 
     // Input file element
@@ -67,6 +77,25 @@ const UploadElement = (props: UploadElementProps) => {
                     </div>
                 </div>
             </div>
+            {
+                (uploading) && (
+                    <div className="mt-2">
+                        <div className="w-full bg-gray-400 rounded-full">
+                            <div className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${uploadProgress}%` }}>
+                                {
+                                    uploadProgress == 100 ? (
+                                        <>Processing media...</>
+                                    ) : (
+                                        <>
+                                            {uploadProgress}%
+                                        </>
+                                    )
+                                }
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     )
 }
