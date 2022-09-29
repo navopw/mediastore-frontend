@@ -33,6 +33,11 @@ export const getMediaPreview = async (id: string) => {
     }
 }
 
+export const deleteMedia = async (id: string) => {
+    const { data } = await axios.delete(`/media?id=${id}`)
+    return data
+}
+
 export const uploadMedia = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)

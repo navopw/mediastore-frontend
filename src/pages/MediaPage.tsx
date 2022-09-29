@@ -51,9 +51,9 @@ const MediaPage = (_props: any) => {
             if (error?.response?.data.code === 401) {
                 client.authStore.clear()
                 navigate("/login")
-            }
-
-            handleError(snackbar, error);
+            } else {
+                handleError(snackbar, error);
+            }            
         }
     };
 
@@ -89,7 +89,7 @@ const MediaPage = (_props: any) => {
                 <div className="grid grid-cols-5 gap-2 px-2">
                     {
                         filteredMediaList().map((media: any) => 
-                            <MediaElement key={media.id} media={media} />
+                            <MediaElement key={media.id} media={media} onMediaDelete={fetchMedia} />
                         )
                     }
                 </div>

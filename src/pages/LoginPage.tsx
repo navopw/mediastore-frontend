@@ -7,9 +7,13 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Button from '../components/Button'
 import { useEffectOnce } from 'react-use'
+import { handleError } from '../util/SnackbarHandler'
+import { useSnackbar } from 'notistack'
 
 const LoginPage = () => {
+    const snackbar = useSnackbar()
     const navigate = useNavigate()
+    
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
 
@@ -28,7 +32,7 @@ const LoginPage = () => {
 
             navigate("/")
         } catch (error: any) {
-            alert(error.message);
+            handleError(snackbar, error)
         }
     }
 

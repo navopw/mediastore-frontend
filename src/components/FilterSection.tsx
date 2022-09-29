@@ -63,7 +63,7 @@ const FilterSection = (props: FilterSectionProps) => {
 
     return (
         <div className="mt-5 ml-2 mb-5">
-            <Dropdown text="Monat" options={monthsAsOptions()} handleOptionClick={(option: any) => {
+            <Dropdown text="Month" options={monthsAsOptions()} handleOptionClick={(option: any) => {
                 if (option.name == RESET_FILTER) {
                     console.log("Reset filter")
                     props.onMonthReset()
