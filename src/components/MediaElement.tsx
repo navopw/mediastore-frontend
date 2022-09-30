@@ -35,8 +35,9 @@ const MediaElement = (props: MediaElementProps) => {
             // Blob url
             const blobUrl = window.URL.createObjectURL(blob)
 
+            // Mobile, Tablet = Download
+            // Desktop = Open in new tab
             if (isMobile || isTablet) {
-                alert("Mobile")
                 const anchor = document.createElement("a");
                 document.body.appendChild(anchor);
                 anchor.href = blobUrl;
@@ -46,7 +47,6 @@ const MediaElement = (props: MediaElementProps) => {
                     window.URL.revokeObjectURL(blobUrl);
                     document.body.removeChild(anchor);
                 }, 0)
-
             } else {
                 const anchor = document.createElement("a")
                 anchor.href = blobUrl
