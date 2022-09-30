@@ -85,7 +85,7 @@ const MediaElement = (props: MediaElementProps) => {
                             </button>
                         </div>
 
-                        <img src={`data:image/jpeg;base64,${mediaBase64}`} />
+                        <img loading="lazy" src={`data:image/jpeg;base64,${mediaBase64}`} />
                     </>
                 )
             }
