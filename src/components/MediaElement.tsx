@@ -54,6 +54,16 @@ const MediaElement = (props: MediaElementProps) => {
         }
     }
 
+    const truncName = (name: string) => {
+        const limit = 12
+        if (name.length > limit) {
+            const extension = name.split(".").pop()
+            return name.substring(0, limit) + "..." + extension
+        }
+
+        return name
+    }
+
     return (
         <div className="rounded overflow-hidden shadow-lg my-2 relative">
             {
@@ -81,8 +91,10 @@ const MediaElement = (props: MediaElementProps) => {
             }
 
             <div className="text-center py-2">
-                <div className="font-bold text-sm">
-                    <a onClick={handleMediaDownload}>{props.media.name}</a>
+                <div className="font-semibold text-sm">
+                    <a onClick={handleMediaDownload}>
+                        {truncName(props.media.name)}
+                    </a>
                 </div>
             </div>
         </div>
