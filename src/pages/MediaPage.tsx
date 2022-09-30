@@ -2,19 +2,24 @@ import React from "react";
 import { useEffectOnce } from "react-use";
 import { useSnackbar } from 'notistack';
 
-import { listMedia } from "../requests/Requests";
+import { getTotalMediaSize, listMedia } from "../requests/Requests";
 import { useNavigate } from "react-router-dom";
 import MediaElement from "../components/MediaElement";
 import UploadElement from "../components/UploadElement";
 import { handleError, handleSuccess } from "../util/SnackbarHandler";
 import { client } from "../pocketbase/PocketBaseHandler";
 import FilterSection from "../components/FilterSection";
+import { useStore } from "../store/AppStore";
 
 const MediaPage = (_props: any) => {
     const snackbar = useSnackbar()
     const navigate = useNavigate()
+    const store = useStore()
 
+    // States
     const [mediaList, setMediaList] = React.useState([]);
+
+    // Filters
     const [selectedDate, setSelectedDate] = React.useState<Date>();
 
     const filteredMediaList = () => {
@@ -43,6 +48,11 @@ const MediaPage = (_props: any) => {
         return filteredList
     }
 
+    const fetch = async () => {
+        await fetchTotalMediaSize()
+        await fetchMedia()
+    }
+
     const fetchMedia = async () => {
         try {
             const response = await listMedia();
@@ -55,7 +65,21 @@ const MediaPage = (_props: any) => {
                 handleError(snackbar, error);
             }            
         }
-    };
+    }
+
+    const fetchTotalMediaSize = async () => {
+        try {
+            const response = await getTotalMediaSize()
+            store.setTotalMediaSize(response.size)
+        } catch (error: any) {
+            if (error?.response?.data.code === 401) {
+                client.authStore.clear()
+                navigate("/login")
+            } else {
+                handleError(snackbar, error);
+            }     
+        }
+    }
 
     const handleMonthChange = (month: Date) => {
         setSelectedDate(month)
@@ -68,7 +92,7 @@ const MediaPage = (_props: any) => {
     }
 
     useEffectOnce(() => {
-        fetchMedia();
+        fetch()
     });
 
     return (
@@ -81,15 +105,13 @@ const MediaPage = (_props: any) => {
                 />
 
                 {/* Upload element */}
-                <UploadElement onUpload={() => {
-                    fetchMedia();
-                }} />
+                <UploadElement onUpload={fetch} />
 
                 {/* Images Grid */}
-                <div className="grid grid-cols-5 gap-2 px-2">
+                <div className="grid grid-cols-6 gap-2 px-2">
                     {
                         filteredMediaList().map((media: any) => 
-                            <MediaElement key={media.id} media={media} onMediaDelete={fetchMedia} />
+                            <MediaElement key={media.id} media={media} onMediaDelete={fetch} />
                         )
                     }
                 </div>

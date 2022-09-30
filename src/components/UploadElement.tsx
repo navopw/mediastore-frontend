@@ -72,6 +72,17 @@ const UploadElement = (props: UploadElementProps) => {
                                 <span>Upload files</span>
                                 <input id="file-upload" name="file-upload" type="file" className="sr-only" multiple onChange={handleFileChange} />
                             </label>
+                            <span className="font-medium text-gray ">
+                            &nbsp;or&nbsp;
+                            </span>
+                            <label
+                                htmlFor="file-upload"
+                                className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none hover:text-indigo-800"
+                            >
+                                <span>folder</span>
+                                {/* @ts-expect-error */}
+                                <input id="file-upload" name="file-upload" type="file" className="sr-only" webkitdirectory="" multiple onChange={handleFileChange} />
+                            </label>
                         </div>
                         <p className="text-xs text-gray-500">All types of images and videos, unlimited storage</p>
                     </div>

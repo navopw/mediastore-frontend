@@ -3,6 +3,8 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { client } from '../pocketbase/PocketBaseHandler'
 import { Link, useNavigate } from 'react-router-dom'
+import { humanFileSize } from '../util/FileSizeFormatter'
+import { useStore } from '../store/AppStore'
 
 interface MenuItem {
     name: string
@@ -19,12 +21,17 @@ const navigation: MenuItem[] = [
     */
 ]
 
+interface NavbarProps {
+   
+}
+
 function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
 }
 
-const Navbar = (props: any) => {
+const Navbar = (props: NavbarProps) => {
     const navigate = useNavigate()
+    const store = useStore()
 
     const handleLogoutClick = () => {
         client.authStore.clear()
@@ -55,8 +62,16 @@ const Navbar = (props: any) => {
                             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                                 <div className="flex flex-shrink-0 items-center">
                                     <div className="text-white uppercase text-xl font-semibold">
-                                        mediastore
+                                        MEDIASTORE
                                     </div>
+
+                                    {
+                                        (store.totalMediaSize != null && store.totalMediaSize > 0) && (
+                                            <div className="text-white text-sm ml-2">
+                                                {humanFileSize(store.totalMediaSize)}
+                                            </div>
+                                        )
+                                    }
                                     {/*
 
                                     LOGO
