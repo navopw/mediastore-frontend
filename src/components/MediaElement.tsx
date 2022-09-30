@@ -1,5 +1,6 @@
 import { useSnackbar } from "notistack"
 import React from "react"
+import { isMobile, isTablet } from "react-device-detect"
 import useEffectOnce from "react-use/lib/useEffectOnce"
 import { deleteMedia, getMedia, getMediaPreview } from "../requests/Requests"
 import { handleError, handleSuccess } from "../util/SnackbarHandler"
@@ -31,12 +32,27 @@ const MediaElement = (props: MediaElementProps) => {
         try {
             const blob = await getMedia(props.media.id)
 
-            const url = window.URL.createObjectURL(blob)
+            // Blob url
+            const blobUrl = window.URL.createObjectURL(blob)
 
-            const anchor = document.createElement("a")
-            anchor.href = url
-            anchor.target = "_blank"
-            anchor.click()
+            if (isMobile || isTablet) {
+                alert("Mobile")
+                const anchor = document.createElement("a");
+                document.body.appendChild(anchor);
+                anchor.href = blobUrl;
+                anchor.download = props.media.name;
+                anchor.click();
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(blobUrl);
+                    document.body.removeChild(anchor);
+                }, 0)
+
+            } else {
+                const anchor = document.createElement("a")
+                anchor.href = blobUrl
+                anchor.target = "_blank"
+                anchor.click()
+            }
         } catch (error: any) {
             handleError(snackbar, error)
         }
@@ -85,16 +101,16 @@ const MediaElement = (props: MediaElementProps) => {
                             </button>
                         </div>
 
-                        <img loading="lazy" src={`data:image/jpeg;base64,${mediaBase64}`} />
+                        <button onClick={handleMediaDownload}>
+                            <img loading="lazy" src={`data:image/jpeg;base64,${mediaBase64}`} />
+                        </button>
                     </>
                 )
             }
 
             <div className="text-center py-2">
                 <div className="font-semibold text-sm">
-                    <a onClick={handleMediaDownload}>
-                        {truncName(props.media.name)}
-                    </a>
+                    {truncName(props.media.name)}
                 </div>
             </div>
         </div>
