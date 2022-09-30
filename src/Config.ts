@@ -1,3 +1,3 @@
 export default {
-    pocketbase: "http://localhost:8090",
+    pocketbase: "https://mediastore-pb.stanislav.software",
 }
