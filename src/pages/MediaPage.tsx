@@ -108,7 +108,7 @@ const MediaPage = (_props: any) => {
                 <UploadElement onUpload={fetch} />
 
                 {/* Images Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-2 px-2">
+                <div className="grid grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-2 px-2">
                     {
                         filteredMediaList().map((media: any) => 
                             <MediaElement key={media.id} media={media} onMediaDelete={fetch} />
