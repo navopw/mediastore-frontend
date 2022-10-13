@@ -5,6 +5,9 @@ import { client } from '../pocketbase/PocketBaseHandler'
 import { Link, useNavigate } from 'react-router-dom'
 import { humanFileSize } from '../util/FileSizeFormatter'
 import { useStore } from '../store/AppStore'
+import { handleError } from '../util/SnackbarHandler'
+import { useSnackbar } from 'notistack'
+import { detectMedia } from '../requests/Requests'
 
 interface MenuItem {
     name: string
@@ -31,11 +34,20 @@ function classNames(...classes: any) {
 
 const Navbar = (props: NavbarProps) => {
     const navigate = useNavigate()
+    const snackbar = useSnackbar()
     const store = useStore()
 
     const handleLogoutClick = () => {
         client.authStore.clear()
         navigate("/login")
+    }
+
+    const handleRunYoloClick = async () => {
+        try {
+            await detectMedia()
+        } catch (error: any) {
+            handleError(snackbar, error)
+        }
     }
 
     return (
@@ -102,6 +114,16 @@ const Navbar = (props: NavbarProps) => {
                                                 {item.name}
                                             </Link>
                                         ))}
+
+                                        <div
+                                            className={classNames(
+                                                'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                'block px-3 py-2 rounded-md text-base font-medium cursor-pointer'
+                                            )}
+                                            onClick={handleRunYoloClick}
+                                        >
+                                            Run Yolov5
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +166,6 @@ const Navbar = (props: NavbarProps) => {
                                         </Menu>
                                     )
                                 }
-
                             </div>
                         </div>
                     </div>

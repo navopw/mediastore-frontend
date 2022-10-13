@@ -50,6 +50,11 @@ export const uploadMedia = async (file: File, percentCallback: any) => {
     return data
 }
 
+export const detectMedia = async () => {
+    const { data } = await axios.get('/media/detect')
+    return data
+}
+
 export const getTotalMediaSize = async () => {
     const { data } = await axios.get('/media/totalsize')
     return data
