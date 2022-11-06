@@ -41,12 +41,10 @@ export const deleteMedia = async (id: string) => {
 export const uploadMedia = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
+
+    console.log(file.type)
     
-    const { data } = await axios.post('/media', formData, {
-        headers: {
-            'Content-Type': file.type
-        }
-    })
+    const { data } = await axios.post('/media', formData)
     return data
 }
 
