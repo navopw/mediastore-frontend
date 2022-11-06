@@ -22,11 +22,13 @@ const UploadElement = (props: UploadElementProps) => {
         }
 
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files.item(i);
+        for (const element of files) {
+            const file = element;
         
+            console.log(file);
+
             try {
-                await uploadMedia(file!!);
+                await uploadMedia(file);
                 handleSuccess(snackbar, "Uploaded " + file?.name);
                 props.onUpload();
             } catch (error: any) {
