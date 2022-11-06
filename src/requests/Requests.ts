@@ -42,7 +42,11 @@ export const uploadMedia = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
     
-    const { data } = await axios.post('/media', formData)
+    const { data } = await axios.post('/media', formData, {
+        headers: {
+            'Content-Type': file.type
+        }
+    })
     return data
 }
 
