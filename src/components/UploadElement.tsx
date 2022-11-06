@@ -44,8 +44,15 @@ const UploadElement = (props: UploadElementProps) => {
             const promises = []
 
             for (let file of chunk) {
-                const promise = uploadMedia(file);
-                promises.push(promise);
+
+                // octet-stream workaround
+                if (file.name.endsWith(".heic")) {
+                    const heicFile = deepCopyFileWithType(file, "image/heic");
+                    promises.push(uploadMedia(heicFile));
+                    continue
+                }
+
+                promises.push(uploadMedia(file));
             }
 
             try {
