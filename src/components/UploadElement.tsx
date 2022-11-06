@@ -26,41 +26,25 @@ const UploadElement = (props: UploadElementProps) => {
             return
         }
 
-        // Make chunks of 20 files
-        const chunks = [];
-        for (let i = 0; i < files.length; i += 20) {
-            const filesInChunk = []
-            for (let j = i; j < i + 20; j++) {
-                if (j >= files.length) {
-                    break;
-                }
-                filesInChunk.push(files[j]);
+        for (let i = 0; i < files.length; i++) {
+            let file = files.item(i);
+
+            if (file == null) {
+                handleError(snackbar, "File is null");
+                continue
             }
-            chunks.push(filesInChunk);
-        }
 
-        // Upload chunks
-        for (const chunk of chunks) {
-            const promises = []
-
-            for (let file of chunk) {
-
-                // octet-stream workaround
-                if (file.name.endsWith(".heic")) {
-                    const heicFile = deepCopyFileWithType(file, "image/heic");
-                    promises.push(uploadMedia(heicFile));
-                    continue
-                }
-
-                promises.push(uploadMedia(file));
+            // octet-stream workaround
+            if (file.name.endsWith(".heic")) {
+                file = deepCopyFileWithType(file, "image/heic");
             }
 
             try {
-                await Promise.allSettled(promises);
-                handleSuccess(snackbar, "Successfully uploaded " + chunk.length + " files");
+                await uploadMedia(file);
+                handleSuccess(snackbar, "Successfully uploaded " + file.name);
                 props.onUpload();
             } catch (error) {
-                handleError(snackbar, "Failed to upload " + chunk.length + " files");
+                handleError(snackbar, error);
             }
         }
     }

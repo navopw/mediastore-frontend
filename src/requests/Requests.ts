@@ -42,9 +42,8 @@ export const uploadMedia = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
 
-    console.log(file.type)
-    
-    await axios.post('/media', formData)
+    const { data } = await axios.post('/media', formData)
+    return data
 }
 
 export const detectMedia = async () => {
