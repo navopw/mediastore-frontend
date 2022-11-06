@@ -56,7 +56,7 @@ const UploadElement = (props: UploadElementProps) => {
             }
 
             try {
-                await Promise.all(promises);
+                await Promise.allSettled(promises);
                 handleSuccess(snackbar, "Successfully uploaded " + chunk.length + " files");
                 props.onUpload();
             } catch (error) {
