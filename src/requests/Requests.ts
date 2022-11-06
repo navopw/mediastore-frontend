@@ -38,17 +38,13 @@ export const deleteMedia = async (id: string) => {
     return data
 }
 
-export const uploadMedia = async (file: File, successCallback: any, errorCallback: any) => {
+export const uploadMedia = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
 
     console.log(file.type)
     
-    axios.post('/media', formData).then((response) => {
-        successCallback(response.data)
-    }).catch((error) => {
-        errorCallback(error)
-    })
+    await axios.post('/media', formData)
 }
 
 export const detectMedia = async () => {
