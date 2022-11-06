@@ -21,28 +21,17 @@ const UploadElement = (props: UploadElementProps) => {
             return
         }
 
-        // Split files into chunks of 50
-        const chunks = []
-        for (let i = 0; i < files.length; i += 50) {
-            const chunkFiles = []
-            for (let j = i; j < i + 50 && j < files.length; j++) {
-                chunkFiles.push(files.item(j))
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files.item(i);
+        
+            try {
+                await uploadMedia(file!!);
+                handleSuccess(snackbar, "Uploaded " + file?.name);
+                props.onUpload();
+            } catch (error: any) {
+                handleError(snackbar, error.message);
             }
-            chunks.push(chunkFiles)
-        }
-
-        for (const chunk of chunks) {
-            const promises: Promise<any>[] = []
-
-            for (const file of chunk) {
-                const uploadPromise = uploadMedia(file!!)
-                promises.push(uploadPromise)
-            }
-
-            await Promise.all(promises)
-            setUploadProgress(0);
-            handleSuccess(snackbar, "Uploaded " + promises.length + " files");
-            props.onUpload();
         }
     }
 
