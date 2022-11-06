@@ -30,17 +30,17 @@ const UploadElement = (props: UploadElementProps) => {
         for (const element of files) {
             let file = element;
         
+            // .heic
             if (file.name.endsWith(".heic")) {
                 file = deepCopyFileWithType(file, "image/heic");
             }
 
-            try {
-                await uploadMedia(file);
+            uploadMedia(file, () => {
                 handleSuccess(snackbar, "Uploaded " + file?.name);
                 props.onUpload();
-            } catch (error: any) {
-                handleError(snackbar, error.message);
-            }
+            }, (error: any) => {
+                handleError(snackbar, "Failed to upload " + file?.name);
+            });
         }
     }
 
