@@ -10,7 +10,7 @@ interface UploadElementProps {
 const UploadElement = (props: UploadElementProps) => {
     const snackbar = useSnackbar();
 
-    const [uploading, setUploading] = React.useState(false);
+    const [uploading, setUploading] = React.useState(false); // Unused because of batch processing
     const [uploadProgress, setUploadProgress] = React.useState<number>(0);
 
     const handleFileChange = async (event: any) => {
@@ -21,21 +21,25 @@ const UploadElement = (props: UploadElementProps) => {
             return
         }
 
-        setUploading(true)
-
-        // Loop through all files and upload them
-        for (let i = 0; i < files.length; i++) {
-            const file: File | null = files.item(i);
-            uploadMedia(file!!, (percent: number) => {
-                setUploadProgress(percent);
-            }, () => {
-                setUploadProgress(0);
-                handleSuccess(snackbar, "Uploaded " + file?.name);
-                props.onUpload();
-            })
+        // Split files into chunks of 50
+        const chunks = []
+        for (let i = 0; i < files.length; i += 50) {
+            chunks.push(files.slice(i, i + 50))
         }
 
-        setUploading(false)
+        for (const chunk of chunks) {
+            const promises: Promise<any>[] = []
+
+            for (const file of chunk) {
+                const uploadPromise = uploadMedia(file)
+                promises.push(uploadPromise)
+            }
+
+            await Promise.all(promises)
+            setUploadProgress(0);
+            handleSuccess(snackbar, "Uploaded " + promises.length + " files");
+            props.onUpload();
+        }
     }
 
     // Input file element
