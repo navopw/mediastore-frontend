@@ -14,7 +14,7 @@ const UploadElement = (props: UploadElementProps) => {
     const [uploadProgress, setUploadProgress] = React.useState<number>(0);
 
     const handleFileChange = async (event: any) => {
-        const files = event.target.files
+        const files: FileList = event.target.files
 
         if (files == null) {
             handleError(snackbar, "No files selected");
@@ -24,14 +24,18 @@ const UploadElement = (props: UploadElementProps) => {
         // Split files into chunks of 50
         const chunks = []
         for (let i = 0; i < files.length; i += 50) {
-            chunks.push(files.slice(i, i + 50))
+            const chunkFiles = []
+            for (let j = i; j < i + 50 && j < files.length; j++) {
+                chunkFiles.push(files.item(j))
+            }
+            chunks.push(chunkFiles)
         }
 
         for (const chunk of chunks) {
             const promises: Promise<any>[] = []
 
             for (const file of chunk) {
-                const uploadPromise = uploadMedia(file)
+                const uploadPromise = uploadMedia(file!!)
                 promises.push(uploadPromise)
             }
 
