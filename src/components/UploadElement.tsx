@@ -13,6 +13,11 @@ const UploadElement = (props: UploadElementProps) => {
     const [uploading, setUploading] = React.useState(false); // Unused because of batch processing
     const [uploadProgress, setUploadProgress] = React.useState<number>(0);
 
+    const deepCopyFileWithType = (file: File, type: string) => {
+        const newFile = new File([file], file.name, { type });
+        return newFile;
+    };
+
     const handleFileChange = async (event: any) => {
         const files: FileList = event.target.files
 
@@ -23,9 +28,11 @@ const UploadElement = (props: UploadElementProps) => {
 
 
         for (const element of files) {
-            const file = element;
+            let file = element;
         
-            console.log(file);
+            if (file.name.endsWith(".heic")) {
+                file = deepCopyFileWithType(file, "image/heic");
+            }
 
             try {
                 await uploadMedia(file);
