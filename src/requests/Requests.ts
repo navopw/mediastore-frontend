@@ -38,16 +38,18 @@ export const deleteMedia = async (id: string) => {
     return data
 }
 
-export const uploadMedia = async (file: File, percentCallback: any) => {
+export const uploadMedia = (file: File, percentCallback: any, finishedCallback: any) => {
     const formData = new FormData()
     formData.append('file', file)
-    const { data } = await axios.post('/media', formData, {
+    
+    axios.post('/media', formData, {
         onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
             percentCallback(percentCompleted)
         }
+    }).then((response) => {
+        finishedCallback()
     })
-    return data
 }
 
 export const detectMedia = async () => {

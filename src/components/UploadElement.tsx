@@ -26,19 +26,13 @@ const UploadElement = (props: UploadElementProps) => {
         // Loop through all files and upload them
         for (let i = 0; i < files.length; i++) {
             const file: File | null = files.item(i);
-            try {
-                const response = await uploadMedia(file!!, (percent: number) => {
-                    setUploadProgress(percent);
-                });
-
-                // Trigger event
+            uploadMedia(file!!, (percent: number) => {
+                setUploadProgress(percent);
+            }, () => {
+                setUploadProgress(0);
+                handleSuccess(snackbar, "Uploaded " + file?.name);
                 props.onUpload();
-
-                // Show success message
-                handleSuccess(snackbar, `Uploaded ${response.name}`);
-            } catch (error: any) {
-                handleError(snackbar, error);
-            }
+            })
         }
 
         setUploading(false)
